@@ -1,0 +1,8 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#050000"/>
+  <path d="M0 410C190 380 220 480 360 450C500 420 500 250 650 270C800 290 830 520 1200 450V630H0V410Z" fill="#8A0015"/>
+  <path d="M100 180L240 220L360 190L490 330L620 300L780 420L950 390L1100 520" stroke="#FF1D45" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="80" y="155" fill="white" font-family="Arial, sans-serif" font-size="72" font-weight="800">BLEEDLANA</text>
+  <text x="84" y="230" fill="#FF647D" font-family="Arial, sans-serif" font-size="34" font-weight="700">THE MARKET IS BLEEDING</text>
+  <text x="84" y="545" fill="#D8D8D8" font-family="Arial, sans-serif" font-size="30">BTC is bleeding. ETH is bleeding. SOL is bleeding.</text>
+</svg>
