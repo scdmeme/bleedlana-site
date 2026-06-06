@@ -39,7 +39,7 @@ export function FloatingTerminalCards({
       transform
     >
       <div
-        className="w-56 rounded-lg border border-red-200/20 bg-black/80 p-3 font-mono text-[10px] uppercase tracking-[0.16em] text-red-100 shadow-[0_0_42px_rgba(255,24,63,0.22)] backdrop-blur-xl"
+        className="hidden w-56 rounded-lg border border-red-200/20 bg-black/80 p-3 font-mono text-[10px] uppercase tracking-[0.16em] text-red-100 shadow-[0_0_42px_rgba(255,24,63,0.22)] backdrop-blur-xl md:block"
         style={{
           opacity,
           transform: `scale(${0.92 + opacity * 0.08})`

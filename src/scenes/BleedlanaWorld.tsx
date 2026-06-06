@@ -2,13 +2,14 @@
 
 import { type ReactNode, useMemo, useRef } from "react";
 import { Float, MeshDistortMaterial, Sparkles, Text } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { MathUtils, Material, Vector3, type Group, type Object3D } from "three";
 import { BTCBleedScene } from "@/scenes/BTCBleedScene";
 import { BleedlanaTakeoverScene } from "@/scenes/BleedlanaTakeoverScene";
 import { ETHBleedScene } from "@/scenes/ETHBleedScene";
 import { SOLBleedScene } from "@/scenes/SOLBleedScene";
 import { FallingCandles } from "@/objects/FallingCandles";
+import { BloodSurface } from "@/objects/BloodSurface";
 import { MarketCrashParticles } from "@/objects/MarketCrashParticles";
 import { RedChart } from "@/objects/RedChart";
 import { PremiumBleedlanaToken } from "@/objects/PremiumBleedlanaToken";
@@ -49,14 +50,15 @@ function SceneStage({ children, index }: { children: ReactNode; index: number })
     }
 
     const scene = scenes[index];
-    const center = (scene.range[0] + scene.range[1]) / 2;
-    const halfRange = (scene.range[1] - scene.range[0]) / 2;
-    const fadeWindow = halfRange + 0.08;
-    const raw = 1 - Math.abs(progress - center) / fadeWindow;
-    const opacity = MathUtils.smoothstep(MathUtils.clamp(raw, 0, 1), 0, 1);
+    const enter = MathUtils.smoothstep(progress, scene.range[0] - 0.025, scene.range[0] + 0.005);
+    const exit = 1 - MathUtils.smoothstep(progress, scene.range[1] - 0.005, scene.range[1] + 0.025);
+    const opacity = Math.min(enter, exit);
 
     groupRef.current.visible = opacity > 0.018;
-    groupRef.current.scale.setScalar(0.88 + opacity * 0.12);
+    const local = MathUtils.clamp((progress - scene.range[0]) / (scene.range[1] - scene.range[0]), 0, 1);
+    const travel = MathUtils.lerp(-1.25, 0.75, local);
+    groupRef.current.position.z = travel;
+    groupRef.current.scale.setScalar(0.93 + opacity * 0.07);
     groupRef.current.traverse((object) => setObjectOpacity(object, opacity));
   });
 
@@ -65,12 +67,16 @@ function SceneStage({ children, index }: { children: ReactNode; index: number })
 
 function HeroScene() {
   const lowPerformance = useBleedlanaStore((state) => state.lowPerformance);
+  const compact = useThree((state) => state.size.width < 720);
 
   return (
     <group position={scenePosition(0)}>
-      <RedChart color="#ff183f" lineWidth={5} position={[0, 0.15, -0.2]} scale={1.05} variant="hero" />
-      <FallingCandles count={lowPerformance ? 18 : 42} position={[0, 1.6, 0]} radius={9} />
+      <RedChart color="#ff183f" lineWidth={5} position={[0, 0.15, -0.2]} scale={compact ? 0.58 : 1.05} variant="hero" />
+      <group scale={compact ? 0.58 : 1}>
+        <FallingCandles count={lowPerformance || compact ? 18 : 42} position={[0, 1.6, 0]} radius={compact ? 6.4 : 9} />
+      </group>
       <MarketCrashParticles count={lowPerformance ? 28 : 58} position={[0, -0.2, -0.8]} spread={8.4} />
+      <BloodSurface scale={0.95} />
       <Float floatIntensity={0.32} rotationIntensity={0.16} speed={0.9}>
         <mesh position={[0, -1.9, -0.65]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[1.34, 1.34, 0.24, 96]} />
@@ -82,15 +88,17 @@ function HeroScene() {
             roughness={0.2}
           />
         </mesh>
-        <Text
-          color="#ffcad2"
-          fontSize={0.27}
-          fontWeight={900}
-          letterSpacing={0}
-          position={[0, -1.9, -0.38]}
-        >
-          {siteConfig.ticker}
-        </Text>
+        {!compact ? (
+          <Text
+            color="#ffcad2"
+            fontSize={0.27}
+            fontWeight={900}
+            letterSpacing={0}
+            position={[0, -1.9, -0.38]}
+          >
+            {siteConfig.ticker}
+          </Text>
+        ) : null}
       </Float>
     </group>
   );
@@ -160,6 +168,7 @@ function TokenomicsDashboardScene() {
 function FinalPlanetScene() {
   return (
     <group position={scenePosition(6)}>
+      <BloodSurface position={[0, -2.8, -0.7]} scale={0.9} />
       <mesh position={[0, -0.25, -0.8]}>
         <sphereGeometry args={[2.35, 64, 64]} />
         <MeshDistortMaterial

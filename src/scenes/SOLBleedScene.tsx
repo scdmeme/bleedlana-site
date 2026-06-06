@@ -7,37 +7,16 @@ import type { Group } from "three";
 import { FloatingTerminalCards } from "@/objects/FloatingTerminalCards";
 import { BeveledBleedMark } from "@/objects/BeveledBleedMark";
 import { LiquidRedTrail } from "@/objects/LiquidRedTrail";
+import { FractureSparks } from "@/objects/FractureSparks";
 import { RedChart } from "@/objects/RedChart";
 import { siteConfig } from "@/config/site";
+import { CinematicRig } from "@/objects/CinematicRig";
 
 type Tuple3 = [number, number, number];
 
 type SOLBleedSceneProps = {
   position: Tuple3;
 };
-
-function SolBlade({
-  color,
-  position,
-  rotation
-}: {
-  color: string;
-  position: Tuple3;
-  rotation: Tuple3;
-}) {
-  return (
-    <mesh position={position} rotation={rotation}>
-      <boxGeometry args={[2.7, 0.52, 0.42]} />
-      <meshStandardMaterial
-        color={color}
-        emissive={color}
-        emissiveIntensity={0.75}
-        metalness={0.22}
-        roughness={0.24}
-      />
-    </mesh>
-  );
-}
 
 export function SOLBleedScene({ position }: SOLBleedSceneProps) {
   const monolithRef = useRef<Group>(null);
@@ -52,15 +31,20 @@ export function SOLBleedScene({ position }: SOLBleedSceneProps) {
 
   return (
     <group position={position}>
-      <group ref={monolithRef}>
-        <Float floatIntensity={0.18} rotationIntensity={0.08} speed={0.85}>
-          <group scale={[1.18, 1.18, 1.18]}>
-            <SolBlade color="#240006" position={[0, 1.25, -0.28]} rotation={[0, 0, -0.2]} />
-            <SolBlade color="#380008" position={[0, 0.45, -0.28]} rotation={[0, 0, -0.2]} />
-            <SolBlade color="#190004" position={[0, -0.35, -0.28]} rotation={[0, 0, -0.2]} />
+      <CinematicRig
+        compactPosition={[0, 2.05, 0]}
+        compactScale={0.2}
+        position={[2.35, 0.15, 0]}
+        rotation={[0, -0.08, 0]}
+        scale={0.88}
+        sceneIndex={3}
+      >
+        <group ref={monolithRef}>
+          <Float floatIntensity={0.12} rotationIntensity={0.05} speed={0.85}>
+            <group scale={[1.18, 1.18, 1.18]}>
             <BeveledBleedMark floating={false} position={[0, 0.45, 0.22]} scale={0.82} />
-            <mesh position={[0, 0.42, -0.46]} scale={[1.1, 2.6, 0.18]}>
-              <boxGeometry args={[2.8, 1, 1]} />
+            <mesh position={[0, 0.42, -0.46]} scale={[1.1, 2.45, 0.18]}>
+              <boxGeometry args={[3.1, 1, 1]} />
               <MeshDistortMaterial
                 color="#190007"
                 distort={0.18}
@@ -96,16 +80,18 @@ export function SOLBleedScene({ position }: SOLBleedSceneProps) {
               size={4}
               speed={0.45}
             />
-          </group>
-        </Float>
-      </group>
-      <RedChart
-        color="#ff183f"
-        lineWidth={3.2}
-        position={[0, -0.1, 0]}
-        scale={0.82}
-        variant="spiral"
-      />
+            <FractureSparks count={64} position={[0, 0.35, 0.25]} radius={4.6} />
+            </group>
+          </Float>
+        </group>
+        <RedChart
+          color="#ff183f"
+          lineWidth={3.2}
+          position={[0, -0.1, 0]}
+          scale={0.82}
+          variant="spiral"
+        />
+      </CinematicRig>
       <Text
         color="#fff"
         fontSize={0.28}

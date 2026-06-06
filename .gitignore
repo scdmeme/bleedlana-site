@@ -21,6 +21,7 @@ yarn-error.log*
 pnpm-debug.log*
 .pnpm-debug.log*
 dev-server.log
+dev-server-error.log
 playwright-*.png
 
 # env
@@ -31,5 +32,6 @@ playwright-*.png
 
 # typescript
 *.tsbuildinfo
+push-to-github.ps1
 
 .vercel

@@ -1,5 +1,5 @@
 import { MathUtils, Vector3 } from "three";
-import { scenes, type Vec3 } from "@/config/scenes";
+import { getSceneIndexByProgress, scenes, type Vec3 } from "@/config/scenes";
 
 const reusablePosition = new Vector3();
 const reusableTarget = new Vector3();
@@ -16,13 +16,16 @@ function easeInOutCubic(value: number) {
 
 export function getCameraFrame(progress: number) {
   const clamped = Math.min(1, Math.max(0, progress));
-  const scaled = clamped * (scenes.length - 1);
-  const index = Math.min(scenes.length - 2, Math.floor(scaled));
+  const index = getSceneIndexByProgress(clamped);
   const nextIndex = Math.min(scenes.length - 1, index + 1);
-  const localProgress = easeInOutCubic(MathUtils.clamp(scaled - index, 0, 1));
-
   const current = scenes[index];
   const next = scenes[nextIndex];
+  const local = MathUtils.clamp(
+    (clamped - current.range[0]) / (current.range[1] - current.range[0]),
+    0,
+    1
+  );
+  const localProgress = easeInOutCubic(MathUtils.smoothstep(local, 0.62, 1));
 
   const currentPosition = setVec(reusablePosition, current.camera.position).clone();
   const currentTarget = setVec(reusableTarget, current.camera.target).clone();

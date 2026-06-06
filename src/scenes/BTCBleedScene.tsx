@@ -5,6 +5,7 @@ import { BleedingCoin } from "@/objects/BleedingCoin";
 import { FloatingTerminalCards } from "@/objects/FloatingTerminalCards";
 import { RedChart } from "@/objects/RedChart";
 import { siteConfig } from "@/config/site";
+import { CinematicRig } from "@/objects/CinematicRig";
 
 type Tuple3 = [number, number, number];
 
@@ -15,8 +16,16 @@ type BTCBleedSceneProps = {
 export function BTCBleedScene({ position }: BTCBleedSceneProps) {
   return (
     <group position={position}>
-      <Float floatIntensity={0.18} rotationIntensity={0.1} speed={0.9}>
-        <group rotation={[-0.15, -0.45, 0]}>
+      <CinematicRig
+        compactPosition={[0, 2.05, 0]}
+        compactScale={0.34}
+        position={[2.35, 0.25, 0]}
+        rotation={[-0.08, -0.28, 0]}
+        scale={0.92}
+        sceneIndex={1}
+      >
+        <Float floatIntensity={0.12} rotationIntensity={0.05} speed={0.9}>
+          <group rotation={[-0.15, -0.45, 0]}>
           <BleedingCoin label="BTC" position={[0, 0.45, 0]} scale={1.25} />
           <RedChart
             color="#ff183f"
@@ -41,8 +50,9 @@ export function BTCBleedScene({ position }: BTCBleedSceneProps) {
           >
             SUPPORT
           </Text>
-        </group>
-      </Float>
+          </group>
+        </Float>
+      </CinematicRig>
       <FloatingTerminalCards
         logs={siteConfig.terminalLogs.btc}
         position={[2.45, 1.1, -0.65]}

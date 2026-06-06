@@ -2,7 +2,7 @@
 
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import type { Group } from "three";
+import { Object3D, type InstancedMesh } from "three";
 
 type Tuple3 = [number, number, number];
 
@@ -26,7 +26,9 @@ export function FallingCandles({
   position = [0, 0, 0],
   radius = 8
 }: FallingCandlesProps) {
-  const groupRef = useRef<Group>(null);
+  const bodyRef = useRef<InstancedMesh>(null);
+  const wickRef = useRef<InstancedMesh>(null);
+  const dummy = useMemo(() => new Object3D(), []);
   const candles = useMemo(() => {
     const random = mulberry32(8138);
 
@@ -42,44 +44,44 @@ export function FallingCandles({
   }, [count, radius]);
 
   useFrame(({ clock }) => {
-    if (!groupRef.current) {
+    if (!bodyRef.current || !wickRef.current) {
       return;
     }
 
     const elapsed = clock.getElapsedTime();
-    groupRef.current.children.forEach((child, index) => {
-      const candle = candles[index];
+    candles.forEach((candle, index) => {
       const loop = (elapsed * candle.speed + candle.delay) % 8;
-      child.position.y = candle.y - loop;
-      child.rotation.x += 0.004 * candle.speed;
-      child.rotation.z -= 0.006 * candle.speed;
+      dummy.position.set(candle.x, candle.y - loop, candle.z);
+      dummy.rotation.set(
+        candle.rotation[0] + elapsed * 0.08 * candle.speed,
+        candle.rotation[1],
+        candle.rotation[2] - elapsed * 0.12 * candle.speed
+      );
+      dummy.scale.setScalar(candle.scale);
+      dummy.updateMatrix();
+      bodyRef.current?.setMatrixAt(index, dummy.matrix);
+      wickRef.current?.setMatrixAt(index, dummy.matrix);
     });
+    bodyRef.current.instanceMatrix.needsUpdate = true;
+    wickRef.current.instanceMatrix.needsUpdate = true;
   });
 
   return (
-    <group ref={groupRef} position={position}>
-      {candles.map((candle, index) => (
-        <group
-          key={index}
-          position={[candle.x, candle.y, candle.z]}
-          rotation={candle.rotation}
-          scale={candle.scale}
-        >
-          <mesh>
-            <boxGeometry args={[0.18, 0.72, 0.16]} />
-            <meshStandardMaterial
-              color={index % 4 === 0 ? "#ff8a00" : "#ff183f"}
-              emissive="#ff183f"
-              emissiveIntensity={1.1}
-              roughness={0.38}
-            />
-          </mesh>
-          <mesh>
-            <boxGeometry args={[0.035, 1.08, 0.035]} />
-            <meshBasicMaterial color="#ffd7dd" />
-          </mesh>
-        </group>
-      ))}
+    <group position={position}>
+      <instancedMesh ref={bodyRef} args={[undefined, undefined, count]} frustumCulled={false}>
+        <boxGeometry args={[0.18, 0.72, 0.16, 2, 4, 2]} />
+        <meshPhysicalMaterial
+          color="#a90017"
+          emissive="#ff183f"
+          emissiveIntensity={1.35}
+          metalness={0.5}
+          roughness={0.26}
+        />
+      </instancedMesh>
+      <instancedMesh ref={wickRef} args={[undefined, undefined, count]} frustumCulled={false}>
+        <boxGeometry args={[0.028, 1.08, 0.028]} />
+        <meshBasicMaterial color="#ffb4c0" />
+      </instancedMesh>
     </group>
   );
 }

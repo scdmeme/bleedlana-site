@@ -59,8 +59,10 @@ export function HeroOverlay() {
             key={scene.key}
           >
             <motion.div
-              className={`story-panel panel-grid scanline p-5 sm:p-7 ${
-                isHero || isFinal ? "mx-auto" : ""
+              className={`story-panel p-5 sm:p-7 ${
+                isHero || isFinal
+                  ? "story-panel-cinematic mx-auto"
+                  : "panel-grid scanline"
               }`}
               initial={{ opacity: 0, y: 36, scale: 0.98 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}

@@ -140,7 +140,9 @@ export const totalScenes = scenes.length;
 export function getSceneIndexByProgress(progress: number) {
   const clamped = Math.min(1, Math.max(0, progress));
   const foundIndex = scenes.findIndex(
-    (scene) => clamped >= scene.range[0] && clamped <= scene.range[1]
+    (scene, index) =>
+      clamped >= scene.range[0] &&
+      (index === scenes.length - 1 || clamped < scene.range[1])
   );
 
   return foundIndex === -1 ? scenes.length - 1 : foundIndex;

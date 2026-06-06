@@ -34,7 +34,7 @@ export function MarketTicker() {
   const tickerItems = [...items, ...items];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-30 overflow-hidden border-t border-red-200/15 bg-black/70 py-2 font-mono text-xs uppercase tracking-[0.14em] text-white/82 backdrop-blur-xl">
+    <div className="market-ticker fixed bottom-0 left-0 right-0 z-30 overflow-hidden border-t border-red-200/15 bg-black/70 py-2 font-mono text-xs uppercase tracking-[0.14em] text-white/82 backdrop-blur-xl">
       <div className="ticker-track flex w-max gap-4 px-4">
         {tickerItems.map((item, index) => (
           <div

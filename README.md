@@ -37,9 +37,9 @@ npm run build
 - `src/config/token.ts` controls ticker data, tokenomics placeholders, contract, and market symbols.
 - `src/config/scenes.ts` controls scene titles, scroll ranges, camera positions, and overlay copy.
 
-## API Ready
+## Live Market Integration
 
-`src/lib/marketData.ts` currently returns mock BTC/ETH/SOL/BLEEDLANA data. Replace the mock provider with CoinGecko, Birdeye, Dexscreener, or your own route handler when live token data is ready.
+`src/app/api/market/route.ts` fetches live BTC/ETH/SOL prices from CoinGecko and automatically resolves the BLEEDLANA pair through Dexscreener using the active CA. Mock values remain only as a resilient UI fallback.
 
 ## Updating Contract Address And Redeploying
 
@@ -80,11 +80,11 @@ npx vercel deploy --prod
 
 If users still see the old contract after deploy, wait a minute and hard-refresh. For CDN/cache issues, trigger a fresh Vercel production deployment.
 
-## Next Improvements
+## Included Launch Features
 
-- Live prices from CoinGecko/Birdeye/Dexscreener
-- Dexscreener chart embed
-- Real token contract and verified copy flow
-- Animated BLEEDLANA mascot
-- Sound effects toggle for red wipes and market panic pulses
+- CoinGecko BTC/ETH/SOL live prices
+- Automatic Dexscreener pair discovery and chart embed
+- Pump.fun, Dexscreener, and Birdeye links derived from one CA
+- Animated BLEEDLANA mascot/avatar
+- Sound toggle
 - Share-to-X meme generator

@@ -1,7 +1,8 @@
 "use client";
 
-import { Float, Line, Text } from "@react-three/drei";
+import { Edges, Float, Line, Text } from "@react-three/drei";
 import { Vector3 } from "three";
+import { FractureSparks } from "@/objects/FractureSparks";
 import { LiquidRedTrail } from "@/objects/LiquidRedTrail";
 
 type Tuple3 = [number, number, number];
@@ -35,31 +36,40 @@ export function BleedingCoin({ label = "BTC", position = [0, 0, 0], scale = 1 }:
     <Float floatIntensity={0.35} rotationIntensity={0.22} speed={1.4}>
       <group position={position} scale={scale}>
         <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[1.12, 1.12, 0.28, 72]} />
-          <meshStandardMaterial
-            color="#d69b28"
-            emissive="#8a2200"
-            emissiveIntensity={0.8}
-            metalness={0.8}
-            roughness={0.24}
+          <cylinderGeometry args={[1.12, 1.12, 0.34, 96, 2]} />
+          <meshPhysicalMaterial
+            color="#7c4307"
+            emissive="#b32600"
+            emissiveIntensity={0.62}
+            metalness={0.92}
+            roughness={0.19}
+            clearcoat={0.6}
           />
+          <Edges color="#ffbf55" threshold={34} />
         </mesh>
         <mesh position={[0, 0, 0.18]} rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[0.88, 0.035, 12, 96]} />
-          <meshBasicMaterial color="#ffdd80" />
+          <meshPhysicalMaterial
+            color="#ff9b25"
+            emissive="#ff5a00"
+            emissiveIntensity={1.25}
+            metalness={0.8}
+            roughness={0.16}
+          />
         </mesh>
         <Text
-          color="#1a0800"
+          color="#fff0c5"
           fontSize={0.42}
           fontWeight={900}
           letterSpacing={0}
-          position={[0, -0.04, 0.35]}
+          position={[0, -0.04, 0.41]}
         >
           {label}
         </Text>
         {crackLines.map((points, index) => (
           <Line key={index} points={points} color="#240000" lineWidth={3} />
         ))}
+        <FractureSparks count={58} position={[0, 0, 0.3]} radius={2.8} />
         <LiquidRedTrail
           color="#ff183f"
           points={[
