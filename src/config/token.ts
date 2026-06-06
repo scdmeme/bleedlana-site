@@ -6,7 +6,7 @@ export type TickerSymbol = {
   mood: "bleeding" | "takeover";
 };
 
-const activeContractAddress: string = "Soon";
+const activeContractAddress: string = "5WP7BWrTZcZJoThre5eKitUPJbFtg6sgzAujoXFapump";
 
 export const tokenConfig = {
   chain: "Solana",
